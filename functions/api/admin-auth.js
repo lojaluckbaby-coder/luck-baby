@@ -13,7 +13,7 @@ export async function onRequestPost(context) {
       );
     }
 
-    const adminPassword = context.env.ADMIN_PASSWORD;
+    const adminPassword = context.env.SENHA_DE_ADMINISTRADOR;
 
     if (!adminPassword) {
       return new Response(
