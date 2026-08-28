@@ -1,7 +1,7 @@
 export async function onRequestPost(context) {
   try {
     const body = await context.request.json();
-    const password = body?.password ?? body?.senha;
+    const senha = body?.password ?? body?.senha;
 
     if (!password) {
       return new Response(
