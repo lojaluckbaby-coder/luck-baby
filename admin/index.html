@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LUCK BABY — Área Administrativa</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f7f4ef;
+  color:#3f352c
+}
+header{
+  background:#fff;
+  padding:18px 20px;
+  border-bottom:1px solid #ddd;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  position:sticky;
+  top:0;
+  z-index:5
+}
+.logo{
+  color:#a57920;
+  font-size:24px;
+  font-weight:bold
+}
+button{
+  border:0;
+  border-radius:8px;
+  padding:12px 16px;
+  cursor:pointer;
+  font-weight:bold
+}
+.gold{background:#c89425;color:white}
+.danger{background:#b83b3b;color:white}
+.light{background:#eee;color:#333}
+
+.login{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px
+}
+.loginBox{
+  width:100%;
+  max-width:420px;
+  background:white;
+  padding:30px;
+  border-radius:18px;
+  box-shadow:0 8px 30px #0002;
+  text-align:center
+}
+.loginBox h1{color:#a57920}
+input,select,textarea{
+  width:100%;
+  padding:12px;
+  margin:7px 0 14px;
+  border:1px solid #ccc;
+  border-radius:8px;
+  font-size:15px
+}
+.hidden{display:none!important}
+
+main{
+  max-width:1100px;
+  margin:auto;
+  padding:20px
+}
+.tabs{
+  display:flex;
+  gap:8px;
+  overflow:auto;
+  margin-bottom:20px
+}
+.tabs button{
+  background:white;
+  border:1px solid #ddd;
+  white-space:nowrap
+}
+.tabs button.active{
+  background:#c89425;
+  color:white
+}
+.card{
+  background:white;
+  padding:20px;
+  border-radius:14px;
+  margin-bottom:18px;
+  box-shadow:0 2px 10px #0000000d
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:14px
+}
+.stat{
+  background:white;
+  padding:20px;
+  border-radius:14px
+}
+.stat b{
+  display:block;
+  font-size:28px;
+  color:#a57920;
+  margin-top:8px
+}
+.product{
+  border:1px solid #ddd;
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:10px
+}
+.product h3{margin:0 0 6px}
+.actions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:10px
+}
+.small{font-size:13px;color:#777}
+#message{
+  margin:10px 0;
+  padding:10px;
+  border-radius:8px;
+  display:none
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<section id="login" class="login">
+  <div class="loginBox">
+    <div style="font-size:45px">🔐</div>
+    <h1>LUCK BABY</h1>
+    <p>Área administrativa</p>
+
+    <input id="password" type="password"
+           placeholder="Senha do administrador">
+
+    <button class="gold" style="width:100%"
+            onclick="login()">
+      ENTRAR NO PAINEL
+    </button>
+
+    <div id="loginError"
+         style="color:#b33;margin-top:12px"></div>
+  </div>
+</section>
+
+
+<!-- PAINEL -->
+<div id="panel" class="hidden">
+
+<header>
+  <div class="logo">LUCK BABY</div>
+  <button class="light" onclick="logout()">Sair</button>
+</header>
+
+<main>
+
+<div class="tabs">
+  <button class="active" onclick="showTab('dashboard',this)">📊 Dashboard</button>
+  <button onclick="showTab('products',this)">📦 Produtos</button>
+  <button onclick="showTab('orders',this)">🛒 Pedidos</button>
+  <button onclick="showTab('customers',this)">👥 Clientes</button>
+  <button onclick="showTab('settings',this)">⚙️ Configurações</button>
+</div>
+
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="tab">
+
+<div class="grid">
+  <div class="stat">
+    Produtos
+    <b id="totalProducts">0</b>
+  </div>
+
+  <div class="stat">
+    Pedidos
+    <b id="totalOrders">0</b>
+  </div>
+
+  <div class="stat">
+    Clientes
+    <b id="totalCustomers">0</b>
+  </div>
+</div>
+
+<div class="card" style="margin-top:18px">
+  <h2>Bem-vindo ao painel 👋</h2>
+  <p>
+    Aqui você poderá administrar os produtos e informações
+    utilizadas pela loja LUCK BABY.
+  </p>
+</div>
+
+</section>
+
+
+<!-- PRODUTOS -->
+<section id="products" class="tab hidden">
+
+<div class="card">
+
+<h2>📦 Produtos</h2>
+
+<button class="gold" onclick="newProduct()">
++ NOVO PRODUTO
+</button>
+
+<div id="productList" style="margin-top:18px"></div>
+
+</div>
+
+</section>
+
+
+<!-- PEDIDOS -->
+<section id="orders" class="tab hidden">
+
+<div class="card">
+<h2>🛒 Pedidos</h2>
+<div id="orderList"></div>
+</div>
+
+</section>
+
+
+<!-- CLIENTES -->
+<section id="customers" class="tab hidden">
+
+<div class="card">
+<h2>👥 Clientes</h2>
+<div id="customerList"></div>
+</div>
+
+</section>
+
+
+<!-- CONFIGURAÇÕES -->
+<section id="settings" class="tab hidden">
+
+<div class="card">
+
+<h2>⚙️ Configurações</h2>
+
+<label>Nome da loja</label>
+<input id="storeName">
+
+<label>Instagram</label>
+<input id="instagram">
+
+<label>Telefone</label>
+<input id="phone">
+
+<label>E-mail</label>
+<input id="email">
+
+<button class="gold" onclick="saveSettings()">
+SALVAR CONFIGURAÇÕES
+</button>
+
+<div id="message"></div>
+
+</div>
+
+</section>
+
+</main>
+</div>
+
+
+<!-- EDITOR DE PRODUTO -->
+<div id="editor" class="hidden"
+style="
+position:fixed;
+inset:0;
+background:#0008;
+z-index:20;
+overflow:auto;
+padding:20px">
+
+<div style="
+background:white;
+max-width:600px;
+margin:auto;
+padding:22px;
+border-radius:15px">
+
+<h2 id="editorTitle">Novo produto</h2>
+
+<label>Nome do produto</label>
+<input id="pName">
+
+<label>Preço</label>
+<input id="pPrice" type="number" step="0.01">
+
+<label>Preço promocional</label>
+<input id="pPromo" type="number" step="0.01">
+
+<label>Tamanhos</label>
+<input id="pSizes"
+placeholder="Ex.: 2,4,6,8">
+
+<label>Categoria</label>
+<input id="pCategory">
+
+<label>Emoji</label>
+<input id="pEmoji" placeholder="👕">
+
+<label>Descrição</label>
+<textarea id="pDesc" rows="4"></textarea>
+
+<div class="actions">
+
+<button class="gold" onclick="saveProduct()">
+SALVAR
+</button>
+
+<button class="light" onclick="closeEditor()">
+CANCELAR
+</button>
+
+</div>
+
+</div>
+</div>
+
+
+<script>
+
+const KEY='luckbaby_store_pro_v3';
+
+/*
+  IMPORTANTE:
+  Esta senha é somente para proteger a tela
+  administrativa no navegador.
+*/
+const ADMIN_PASSWORD='lucas251400';
+
+let db=null;
+let editingIndex=-1;
+
+
+/* ---------- DADOS ---------- */
+
+function loadDB(){
+
+  try{
+    db=JSON.parse(localStorage.getItem(KEY)||'null');
+  }catch(e){
+    db=null;
+  }
+
+  if(!db){
+    db={
+      products:[],
+      cart:[],
+      orders:[],
+      customers:[],
+      favorites:[],
+      settings:{
+        whatsapp:'',
+        pixName:'',
+        storeName:'LUCK BABY – Loja Infantil',
+        instagram:'',
+        phone:'',
+        email:''
+      },
+      categories:[]
+    };
+  }
+
+  if(!Array.isArray(db.products)) db.products=[];
+  if(!Array.isArray(db.orders)) db.orders=[];
+  if(!Array.isArray(db.customers)) db.customers=[];
+  if(!db.settings) db.settings={};
+
+}
+
+
+function saveDB(){
+  localStorage.setItem(KEY,JSON.stringify(db));
+}
+
+
+/* ---------- LOGIN ---------- */
+
+function login(){
+
+  const p=document.getElementById('password').value;
+
+  if(p===ADMIN_PASSWORD){
+
+    sessionStorage.setItem('luck_admin','1');
+
+    document.getElementById('login')
+      .classList.add('hidden');
+
+    document.getElementById('panel')
+      .classList.remove('hidden');
+
+    loadDB();
+    renderAll();
+
+  }else{
+
+    document.getElementById('loginError')
+      .textContent='Senha incorreta.';
+
+  }
+
+}
+
+
+function logout(){
+
+  sessionStorage.removeItem('luck_admin');
+
+  document.getElementById('panel')
+    .classList.add('hidden');
+
+  document.getElementById('login')
+    .classList.remove('hidden');
+
+  document.getElementById('password').value='';
+
+}
+
+
+/* ---------- ABAS ---------- */
+
+function showTab(id,button){
+
+  document.querySelectorAll('.tab')
+    .forEach(x=>x.classList.add('hidden'));
+
+  document.getElementById(id)
+    .classList.remove('hidden');
+
+  document.querySelectorAll('.tabs button')
+    .forEach(x=>x.classList.remove('active'));
+
+  button.classList.add('active');
+
+  renderAll();
+}
+
+
+/* ---------- DASHBOARD ---------- */
+
+function renderDashboard(){
+
+  document.getElementById('totalProducts')
+    .textContent=db.products.length;
+
+  document.getElementById('totalOrders')
+    .textContent=db.orders.length;
+
+  document.getElementById('totalCustomers')
+    .textContent=db.customers.length;
+
+}
+
+
+/* ---------- PRODUTOS ---------- */
+
+function renderProducts(){
+
+  const box=document.getElementById('productList');
+
+  if(!db.products.length){
+
+    box.innerHTML=
+      '<p class="small">Nenhum produto cadastrado.</p>';
+
+    return;
+  }
+
+  box.innerHTML=db.products.map((p,i)=>{
+
+    const price=Number(p.price||0);
+    const promo=Number(p.promo||0);
+
+    return `
+    <div class="product">
+
+      <h3>${esc(p.emoji||'👕')} ${esc(p.name||'Sem nome')}</h3>
+
+      <div>
+        Preço:
+        <strong>R$ ${price.toFixed(2).replace('.',',')}</strong>
+      </div>
+
+      ${promo ? `
+        <div style="color:#b33">
+          Promoção:
+          <strong>R$ ${promo.toFixed(2).replace('.',',')}</strong>
+        </div>
+      `:''}
+
+      <div class="small">
+        Categoria: ${esc(p.category||'-')}
+      </div>
+
+      <div class="small">
+        Tamanhos: ${esc(p.sizes||'-')}
+      </div>
+
+      <div class="actions">
+
+        <button class="gold"
+                onclick="editProduct(${i})">
+          EDITAR
+        </button>
+
+        <button class="danger"
+                onclick="deleteProduct(${i})">
+          EXCLUIR
+        </button>
+
+      </div>
+
+    </div>
+    `;
+
+  }).join('');
+
+}
+
+
+function newProduct(){
+
+  editingIndex=-1;
+
+  document.getElementById('editorTitle')
+    .textContent='Novo produto';
+
+  document.getElementById('pName').value='';
+  document.getElementById('pPrice').value='';
+  document.getElementById('pPromo').value='';
+  document.getElementById('pSizes').value='';
+  document.getElementById('pCategory').value='';
+  document.getElementById('pEmoji').value='👕';
+  document.getElementById('pDesc').value='';
+
+  document.getElementById('editor')
+    .classList.remove('hidden');
+
+}
+
+
+function editProduct(i){
+
+  const p=db.products[i];
+
+  editingIndex=i;
+
+  document.getElementById('editorTitle')
+    .textContent='Editar produto';
+
+  document.getElementById('pName').value=p.name||'';
+  document.getElementById('pPrice').value=p.price||'';
+  document.getElementById('pPromo').value=p.promo||'';
+  document.getElementById('pSizes').value=p.sizes||'';
+  document.getElementById('pCategory').value=p.category||'';
+  document.getElementById('pEmoji').value=p.emoji||'👕';
+  document.getElementById('pDesc').value=p.desc||'';
+
+  document.getElementById('editor')
+    .classList.remove('hidden');
+
+}
+
+
+function saveProduct(){
+
+  const name=document.getElementById('pName').value.trim();
+
+  if(!name){
+    alert('Digite o nome do produto.');
+    return;
+  }
+
+  const old=editingIndex>=0
+    ? db.products[editingIndex]
+    : {};
+
+  const product={
+    ...old,
+
+    id:old.id || 'p'+Date.now(),
+
+    name:name,
+
+    price:Number(
+      document.getElementById('pPrice').value||0
+    ),
+
+    promo:Number(
+      document.getElementById('pPromo').value||0
+    ),
+
+    sizes:document.getElementById('pSizes').value,
+
+    category:document.getElementById('pCategory').value,
+
+    emoji:document.getElementById('pEmoji').value,
+
+    desc:document.getElementById('pDesc').value
+
+  };
+
+  if(editingIndex>=0)
+    db.products[editingIndex]=product;
+  else
+    db.products.push(product);
+
+  saveDB();
+
+  closeEditor();
+  renderAll();
+
+}
+
+
+function deleteProduct(i){
+
+  if(!confirm(
+    'Tem certeza que deseja excluir este produto?'
+  )) return;
+
+  db.products.splice(i,1);
+
+  saveDB();
+  renderAll();
+
+}
+
+
+function closeEditor(){
+
+  document.getElementById('editor')
+    .classList.add('hidden');
+
+}
+
+
+/* ---------- PEDIDOS ---------- */
+
+function renderOrders(){
+
+  const box=document.getElementById('orderList');
+
+  if(!db.orders.length){
+
+    box.innerHTML=
+      '<p class="small">Nenhum pedido encontrado.</p>';
+
+    return;
+  }
+
+  box.innerHTML=db.orders.map((o,i)=>`
+
+    <div class="product">
+
+      <h3>Pedido ${esc(o.id||('#'+(i+1)))}</h3>
+
+      <div>
+        Cliente:
+        ${esc(o.customerName||o.name||'-')}
+      </div>
+
+      <div>
+        Total:
+        R$ ${Number(o.total||0)
+          .toFixed(2).replace('.',',')}
+      </div>
+
+      <div class="small">
+        Status:
+        ${esc(o.status||'Aguardando')}
+      </div>
+
+    </div>
+
+  `).join('');
+
+}
+
+
+/* ---------- CLIENTES ---------- */
+
+function renderCustomers(){
+
+  const box=document.getElementById('customerList');
+
+  if(!db.customers.length){
+
+    box.innerHTML=
+      '<p class="small">Nenhum cliente encontrado.</p>';
+
+    return;
+  }
+
+  box.innerHTML=db.customers.map((c,i)=>`
+
+    <div class="product">
+
+      <h3>${esc(c.name||'Cliente')}</h3>
+
+      <div>Telefone: ${esc(c.phone||'-')}</div>
+
+      <div class="small">
+        Pedidos: ${
+          Array.isArray(c.orders)
+          ? c.orders.length
+          : 0
+        }
+      </div>
+
+    </div>
+
+  `).join('');
+
+}
+
+
+/* ---------- CONFIGURAÇÕES ---------- */
+
+function renderSettings(){
+
+  const s=db.settings||{};
+
+  document.getElementById('storeName').value=
+    s.storeName||'';
+
+  document.getElementById('instagram').value=
+    s.instagram||'';
+
+  document.getElementById('phone').value=
+    s.phone||'';
+
+  document.getElementById('email').value=
+    s.email||'';
+
+}
+
+
+function saveSettings(){
+
+  if(!db.settings) db.settings={};
+
+  db.settings.storeName=
+    document.getElementById('storeName').value;
+
+  db.settings.instagram=
+    document.getElementById('instagram').value;
+
+  db.settings.phone=
+    document.getElementById('phone').value;
+
+  db.settings.email=
+    document.getElementById('email').value;
+
+  saveDB();
+
+  const m=document.getElementById('message');
+
+  m.style.display='block';
+  m.style.background='#e6f5e8';
+  m.style.color='#286b32';
+  m.textContent='Configurações salvas!';
+
+  setTimeout(()=>{
+    m.style.display='none';
+  },2500);
+
+}
+
+
+/* ---------- SEGURANÇA ---------- */
+
+function esc(value){
+
+  return String(value??'')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#039;');
+
+}
+
+
+/* ---------- RENDER ---------- */
+
+function renderAll(){
+
+  renderDashboard();
+  renderProducts();
+  renderOrders();
+  renderCustomers();
+  renderSettings();
+
+}
+
+
+/* ---------- INÍCIO ---------- */
+
+loadDB();
+
+if(sessionStorage.getItem('luck_admin')==='1'){
+
+  document.getElementById('login')
+    .classList.add('hidden');
+
+  document.getElementById('panel')
+    .classList.remove('hidden');
+
+  renderAll();
+
+}
+
+</script>
+
+</body>
+</html>
