@@ -1,1850 +1,261 @@
-  if(categories.includes(cur))s.value=cur;
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#a57920">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="LUCK BABY">
+<link rel="manifest" href="manifest.json">
+<title>LUCK BABY — Área Administrativa</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Arial,Helvetica,sans-serif;background:#f7f4ef;color:#3f352c}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+header{background:#fff;padding:13px 18px;border-bottom:1px solid #e4ded5;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:20;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.logo-area{display:flex;align-items:center;gap:10px}.logo-img{width:46px;height:46px}.logo{color:#a57920;font-size:21px;font-weight:bold}.logo small{display:block;color:#777;font-size:11px;font-weight:normal;margin-top:2px}
+.header-right{display:flex;gap:10px;align-items:center}.date{font-size:13px;color:#777}.menu-btn{display:none;background:#a57920;color:#fff;border:0;border-radius:8px;padding:10px 13px}
+.layout{display:flex;min-height:calc(100vh - 73px)}.sidebar{width:235px;background:#fff;border-right:1px solid #e4ded5;padding:18px 14px}
+.sidebar-title{font-size:11px;color:#999;text-transform:uppercase;margin:8px 12px 10px;letter-spacing:1px}
+.nav-btn{width:100%;text-align:left;border:0;background:transparent;color:#5b5148;padding:12px 14px;border-radius:9px;margin-bottom:4px}.nav-btn:hover,.nav-btn.active{background:#f2eadc;color:#916915;font-weight:bold}
+.main{flex:1;padding:24px;min-width:0}.page{display:none}.page.active{display:block}
+.page-title{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:20px}.page-title h1{margin:0;font-size:25px}.page-title p{margin:5px 0 0;color:#888;font-size:14px}
+.primary{background:#a57920;color:#fff;border:0;border-radius:8px;padding:11px 16px;font-weight:bold}.primary:hover{background:#8f681c}
+.secondary{background:#fff;color:#5a5149;border:1px solid #ddd3c7;border-radius:8px;padding:10px 14px}.danger{background:#fff0ef;color:#b23b32;border:1px solid #efc6c1;border-radius:7px;padding:7px 10px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:22px}.stat,.card,.category,.banner-card{background:#fff;border:1px solid #e5ded5;border-radius:12px;box-shadow:0 2px 8px rgba(0,0,0,.025)}
+.stat{padding:18px}.stat-label{font-size:13px;color:#888}.stat-value{font-size:27px;font-weight:bold;margin-top:8px}.gold{color:#a57920}
+.card{padding:19px;margin-bottom:18px}.card-title{font-weight:bold;font-size:17px;margin-bottom:14px}
+.dashboard-grid{display:grid;grid-template-columns:2fr 1fr;gap:18px}.quick-actions{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.quick{background:#faf8f5;border:1px solid #e7e0d7;border-radius:9px;padding:15px;text-align:left}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}.search{flex:1;min-width:210px;padding:11px 13px;border:1px solid #dcd3c8;border-radius:8px;outline:none;background:#fff}
+input:focus,select:focus,textarea:focus{border-color:#b28a3c;box-shadow:0 0 0 2px rgba(178,138,60,.08);outline:none}
+.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:760px}th{text-align:left;font-size:12px;color:#888;background:#faf8f5;padding:11px;border-bottom:1px solid #e5ded5}td{padding:11px;border-bottom:1px solid #eee9e3;font-size:14px}
+.product-name{font-weight:bold}.product-code{font-size:12px;color:#999;margin-top:3px}.price{font-weight:bold;color:#8e691f}.actions{display:flex;gap:6px;flex-wrap:wrap}.small-btn{border:1px solid #ddd3c7;background:#fff;color:#665b51;border-radius:7px;padding:7px 9px;font-size:12px}
+.badge{display:inline-block;padding:5px 8px;border-radius:20px;font-size:11px;font-weight:bold}.ok{background:#e9f7ee;color:#287642}.low{background:#fff3d9;color:#966600}.zero{background:#ffe9e7;color:#ad3932}
+.empty{text-align:center;padding:32px 15px;color:#999}.notice{background:#f8f0e3;border:1px solid #ead9bb;border-radius:10px;padding:13px;font-size:13px;color:#70582d}
+.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.field{display:flex;flex-direction:column;gap:6px}.field.full{grid-column:1/-1}.field label{font-size:13px;font-weight:bold;color:#62584f}.field input,.field select,.field textarea{width:100%;padding:11px 12px;border:1px solid #dcd3c8;border-radius:8px;background:#fff}.field textarea{min-height:90px;resize:vertical}.form-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:18px}
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(45,38,32,.48);z-index:100;align-items:center;justify-content:center;padding:15px}.modal-bg.show{display:flex}.modal{width:100%;max-width:720px;max-height:92vh;overflow:auto;background:#fff;border-radius:14px;padding:21px;box-shadow:0 15px 50px rgba(0,0,0,.2)}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.modal-head h2{margin:0;font-size:20px}.close{border:0;background:#f5f1ec;width:34px;height:34px;border-radius:50%;font-size:18px}
+.photo-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}.preview{position:relative;aspect-ratio:1;border:1px solid #e5ded5;border-radius:8px;overflow:hidden;background:#faf8f5}.preview img{width:100%;height:100%;object-fit:cover}.preview button{position:absolute;right:4px;top:4px;border:0;background:rgba(0,0,0,.6);color:#fff;width:25px;height:25px;border-radius:50%}
+.category-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.category{padding:19px;text-align:center}.category-icon{font-size:29px;margin-bottom:8px}.category strong{display:block}.category span{color:#999;font-size:12px}
+.banner-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}.banner-card{overflow:hidden}.banner-card>img{width:100%;aspect-ratio:16/6;object-fit:cover;display:block}.banner-meta{padding:12px;display:flex;justify-content:space-between;gap:10px;align-items:center}.switch{font-size:12px;white-space:nowrap}
+.toast{position:fixed;right:18px;bottom:18px;background:#3f352c;color:#fff;padding:12px 16px;border-radius:8px;box-shadow:0 5px 20px rgba(0,0,0,.2);transform:translateY(100px);opacity:0;transition:.25s;z-index:200}.toast.show{transform:translateY(0);opacity:1}
+.upload-box{border:2px dashed #dccfbf;border-radius:10px;padding:16px;text-align:center;background:#faf8f5}.upload-box input{margin-top:8px}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.dashboard-grid{grid-template-columns:1fr}.sidebar{width:210px}.banner-grid{grid-template-columns:1fr}}
+@media(max-width:700px){header{padding:11px 13px}.date{display:none}.menu-btn{display:block}.sidebar{position:fixed;left:-250px;top:71px;bottom:0;z-index:50;transition:.25s;box-shadow:5px 0 20px rgba(0,0,0,.1)}.sidebar.open{left:0}.main{width:100%;padding:16px 11px}.page-title{align-items:flex-start;flex-direction:column}.stats{gap:9px}.stat{padding:13px}.stat-value{font-size:22px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.category-grid{grid-template-columns:1fr 1fr}.photo-grid{grid-template-columns:repeat(3,1fr)}.logo{font-size:18px}.logo-img{width:40px;height:40px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo-area">
+    <img class="logo-img" src="assets/logo.svg" alt="LUCK BABY">
+    <div class="logo">LUCK BABY<small>Área Administrativa</small></div>
+  </div>
+  <div class="header-right"><span class="date" id="today"></span><button class="menu-btn" onclick="toggleMenu()">☰</button></div>
+</header>
+
+<div class="layout">
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-title">Menu</div>
+  <button class="nav-btn active" onclick="showPage('dashboard',this)">🏠 Dashboard</button>
+  <button class="nav-btn" onclick="showPage('produtos',this)">👕 Produtos</button>
+  <button class="nav-btn" onclick="showPage('banners',this)">🖼️ Banners</button>
+  <button class="nav-btn" onclick="showPage('categorias',this)">🗂️ Categorias</button>
+  <button class="nav-btn" onclick="showPage('estoque',this)">📦 Estoque</button>
+  <div class="sidebar-title">Sistema</div>
+  <button class="nav-btn" onclick="showPage('configuracoes',this)">⚙️ Configurações</button>
+</aside>
+
+<main class="main">
+<section class="page active" id="page-dashboard">
+  <div class="page-title"><div><h1>Dashboard</h1><p>Bem-vindo à administração da LUCK BABY.</p></div><button class="primary" onclick="openProductModal()">+ Novo produto</button></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Produtos cadastrados</div><div class="stat-value gold" id="statProducts">0</div></div>
+    <div class="stat"><div class="stat-label">Itens em estoque</div><div class="stat-value" id="statStock">0</div></div>
+    <div class="stat"><div class="stat-label">Categorias</div><div class="stat-value" id="statCategories">0</div></div>
+    <div class="stat"><div class="stat-label">Estoque baixo</div><div class="stat-value" id="statLow">0</div></div>
+  </div>
+  <div class="dashboard-grid">
+    <div class="card"><div class="card-title">Produtos recentes</div><div class="table-wrap"><table><thead><tr><th>Foto</th><th>Produto</th><th>Categoria</th><th>Preço</th><th>Estoque</th></tr></thead><tbody id="recentProducts"></tbody></table></div></div>
+    <div class="card"><div class="card-title">Ações rápidas</div><div class="quick-actions">
+      <button class="quick" onclick="openProductModal()">➕<br><strong>Novo produto</strong></button>
+      <button class="quick" onclick="showPageById('banners')">🖼️<br><strong>Banners</strong></button>
+      <button class="quick" onclick="showPageById('estoque')">📦<br><strong>Ver estoque</strong></button>
+      <button class="quick" onclick="exportData()">💾<br><strong>Exportar dados</strong></button>
+    </div></div>
+  </div>
+</section>
+
+<section class="page" id="page-produtos">
+  <div class="page-title"><div><h1>Produtos</h1><p>Cadastre produtos com fotos, preços e estoque.</p></div><button class="primary" onclick="openProductModal()">+ Novo produto</button></div>
+  <div class="card">
+    <div class="toolbar"><input class="search" id="productSearch" type="search" placeholder="Pesquisar produto..." oninput="renderProducts()"><select class="search" id="categoryFilter" onchange="renderProducts()" style="max-width:220px"></select></div>
+    <div class="table-wrap"><table><thead><tr><th>Foto</th><th>Produto</th><th>Categoria</th><th>Tamanho</th><th>Preço</th><th>Estoque</th><th>Ações</th></tr></thead><tbody id="productsTable"></tbody></table></div>
+  </div>
+</section>
+
+<section class="page" id="page-banners">
+  <div class="page-title"><div><h1>Banners</h1><p>Cadastre e organize os banners da loja.</p></div><button class="primary" onclick="openBannerModal()">+ Novo banner</button></div>
+  <div class="notice">Os banners ficam salvos localmente e são enviados para a API quando ela estiver disponível.</div><br>
+  <div class="banner-grid" id="bannerGrid"></div>
+</section>
+
+<section class="page" id="page-categorias">
+  <div class="page-title"><div><h1>Categorias</h1><p>Organize os produtos da LUCK BABY.</p></div><button class="primary" onclick="addCategory()">+ Nova categoria</button></div>
+  <div class="category-grid" id="categoryGrid"></div>
+</section>
+
+<section class="page" id="page-estoque">
+  <div class="page-title"><div><h1>Estoque</h1><p>Controle rápido das quantidades disponíveis.</p></div></div>
+  <div class="notice">Produtos com estoque igual ou menor que 2 unidades aparecem como <strong>estoque baixo</strong>.</div><br>
+  <div class="card"><div class="table-wrap"><table><thead><tr><th>Foto</th><th>Produto</th><th>Categoria</th><th>Estoque</th><th>Status</th><th>Ação</th></tr></thead><tbody id="stockTable"></tbody></table></div></div>
+</section>
+
+<section class="page" id="page-configuracoes">
+  <div class="page-title"><div><h1>Configurações</h1><p>Configurações básicas do painel.</p></div></div>
+  <div class="card"><div class="card-title">Informações da loja</div><div class="form-grid">
+    <div class="field"><label>Nome da loja</label><input id="storeName" value="LUCK BABY"></div>
+    <div class="field"><label>Cidade</label><input id="storeCity" placeholder="Digite a cidade"></div>
+    <div class="field"><label>WhatsApp</label><input id="storeWhatsapp" placeholder="Ex.: 5599999999999"></div>
+    <div class="field"><label>Frete grátis acima de</label><input id="freeShipping" type="number" step="0.01" placeholder="0,00"></div>
+    <div class="field full"><label>Mensagem principal</label><input id="storeMessage" value="Moda infantil com carinho."></div>
+  </div><div class="form-actions"><button class="primary" onclick="saveSettings()">Salvar configurações</button></div></div>
+  <div class="card"><div class="card-title">Dados e backup</div><p style="color:#777;font-size:14px">O painel mantém uma cópia local neste dispositivo. Use o backup para guardar os dados antes de trocar de aparelho.</p><button class="secondary" onclick="exportData()">💾 Exportar backup</button><button class="danger" onclick="clearAllData()" style="margin-left:8px">Apagar dados locais</button></div>
+</section>
+</main></div>
+
+<div class="modal-bg" id="productModal"><div class="modal">
+  <div class="modal-head"><h2 id="modalTitle">Novo produto</h2><button class="close" onclick="closeProductModal()">×</button></div>
+  <form id="productForm" onsubmit="saveProduct(event)">
+    <input type="hidden" id="productId">
+    <div class="form-grid">
+      <div class="field full"><label>Nome do produto *</label><input id="productName" required></div>
+      <div class="field"><label>Categoria *</label><select id="productCategory" required></select></div>
+      <div class="field"><label>Marca</label><input id="productBrand" placeholder="Ex.: LUCK BABY"></div>
+      <div class="field"><label>Tamanho</label><input id="productSize" placeholder="P, M, G, GG..."></div>
+      <div class="field"><label>Preço *</label><input id="productPrice" type="number" step="0.01" min="0" required></div>
+      <div class="field"><label>Estoque *</label><input id="productStock" type="number" min="0" step="1" required value="0"></div>
+      <div class="field"><label>Parcelamento</label><input id="productInstallment" placeholder="Ex.: 6x de R$ 29,90"></div>
+      <div class="field"><label>Código / referência</label><input id="productCode" placeholder="Ex.: LB001"></div>
+      <div class="field full"><label>Descrição</label><textarea id="productDescription" placeholder="Descrição do produto..."></textarea></div>
+      <div class="field full"><label>Fotos do produto (até 5)</label><div class="upload-box">Escolha as fotos do produto<input id="productPhotos" type="file" accept="image/*" multiple><div id="photoPreview" class="photo-grid"></div></div></div>
+      <div class="field"><label>Destaque</label><select id="productFeatured"><option value="0">Não</option><option value="1">Sim</option></select></div>
+      <div class="field"><label>Produto ativo</label><select id="productActive"><option value="1">Sim</option><option value="0">Não</option></select></div>
+    </div>
+    <div class="form-actions"><button type="button" class="secondary" onclick="closeProductModal()">Cancelar</button><button type="submit" class="primary">Salvar produto</button></div>
+  </form>
+</div></div>
+
+<div class="modal-bg" id="bannerModal"><div class="modal">
+  <div class="modal-head"><h2 id="bannerModalTitle">Novo banner</h2><button class="close" onclick="closeBannerModal()">×</button></div>
+  <form id="bannerForm" onsubmit="saveBanner(event)">
+    <input type="hidden" id="bannerId">
+    <div class="form-grid">
+      <div class="field full"><label>Imagem do banner *</label><div class="upload-box">Escolha uma imagem<input id="bannerImage" type="file" accept="image/*"><div id="bannerPreview" class="photo-grid"></div></div></div>
+      <div class="field"><label>Título</label><input id="bannerTitle" placeholder="Ex.: Nova coleção"></div>
+      <div class="field"><label>Texto</label><input id="bannerText" placeholder="Ex.: Confira as novidades"></div>
+      <div class="field"><label>Link</label><input id="bannerLink" placeholder="Ex.: /produtos"></div>
+      <div class="field"><label>Ordem</label><input id="bannerOrder" type="number" value="0"></div>
+      <div class="field"><label>Ativo</label><select id="bannerActive"><option value="1">Sim</option><option value="0">Não</option></select></div>
+    </div>
+    <div class="form-actions"><button type="button" class="secondary" onclick="closeBannerModal()">Cancelar</button><button type="submit" class="primary">Salvar banner</button></div>
+  </form>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+const API_PRODUCTS="/api/products", API_BANNERS="/api/banners";
+const DEFAULT_CATEGORIES=["Meninas","Meninos","Bebê","Calçados","Acessórios","Outros"];
+let products=[],categories=[],banners=[],selectedPhotos=[],selectedBannerImage="",toastTimer;
+
+function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
+function money(v){return Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL"})}
+function badge(v){v=Number(v||0);return v<=0?'<span class="badge zero">Sem estoque</span>':v<=2?`<span class="badge low">${v} — estoque baixo</span>`:`<span class="badge ok">${v} disponíveis</span>`}
+function normalizeProduct(p){return {...p,id:String(p.id??Date.now()),name:p.name||"",category:p.category||DEFAULT_CATEGORIES[0],brand:p.brand||"",size:p.size||"",price:Number(p.price||0),stock:Number(p.stock||0),installment:p.installment||"",code:p.code||"",description:p.description||"",images:Array.isArray(p.images)?p.images:[],featured:Number(p.featured||0),active:p.active===undefined?1:Number(p.active)}}
+function normalizeBanner(b){return {...b,id:String(b.id??Date.now()),title:b.title||"",text:b.text||"",link:b.link||"",image_url:b.image_url||b.image||"",sort_order:Number(b.sort_order||0),active:b.active===undefined?1:Number(b.active)}}
+
+function localSave(){
+  localStorage.setItem("luckbaby_products",JSON.stringify(products));
+  localStorage.setItem("luckbaby_categories",JSON.stringify(categories));
+  localStorage.setItem("luckbaby_banners",JSON.stringify(banners));
 }
-function thumb(p){return p.images?.[0]?`<img src="${esc(p.images[0])}" style="width:48px;height:48px;object-fit:cover;border-radius:7px">`:"📷"}
+function loadLocal(){
+  try{
+    products=(JSON.parse(localStorage.getItem("luckbaby_products")||"[]")||[]).map(normalizeProduct);
+    categories=JSON.parse(localStorage.getItem("luckbaby_categories")||"null")||[...DEFAULT_CATEGORIES];
+    banners=(JSON.parse(localStorage.getItem("luckbaby_banners")||"[]")||[]).map(normalizeBanner);
+  }catch(e){products=[];categories=[...DEFAULT_CATEGORIES];banners=[]}
+}
+async function api(url,opt={}){const r=await fetch(url,{...opt,headers:{"Content-Type":"application/json",...(opt.headers||{})}});if(!r.ok)throw new Error("HTTP "+r.status);return r.json()}
+async function loadApi(){
+  try{const r=await fetch(API_PRODUCTS);if(r.ok){const d=await r.json();const arr=Array.isArray(d)?d:(d.products||d.data||[]);if(Array.isArray(arr))products=arr.map(normalizeProduct)}}catch(e){}
+  try{const r=await fetch(API_BANNERS);if(r.ok){const d=await r.json();const arr=Array.isArray(d)?d:(d.banners||d.data||[]);if(Array.isArray(arr))banners=arr.map(normalizeBanner)}}catch(e){}
+  localSave()
+}
+function updateDate(){$("today").textContent=new Date().toLocaleDateString("pt-BR",{weekday:"short",day:"2-digit",month:"2-digit",year:"numeric"})}
+function toggleMenu(){$("sidebar").classList.toggle("open")}
+function showPage(page,btn){
+  document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));$("page-"+page)?.classList.add("active");
+  document.querySelectorAll(".nav-btn").forEach(x=>x.classList.remove("active"));btn?.classList.add("active");$("sidebar").classList.remove("open");
+  renderAll()
+}
+function showPageById(page){let btn=[...document.querySelectorAll(".nav-btn")].find(x=>x.getAttribute("onclick")?.includes("'"+page+"'"));showPage(page,btn)}
+function renderDashboard(){
+  $("statProducts").textContent=products.length;
+  $("statStock").textContent=products.reduce((s,p)=>s+Number(p.stock||0),0);
+  $("statCategories").textContent=categories.length;
+  $("statLow").textContent=products.filter(p=>Number(p.stock||0)<=2).length;
+  const a=[...products].slice(-5).reverse();
+  $("recentProducts").innerHTML=a.length?a.map(p=>`<tr><td>${p.images?.[0]?`<img src="${esc(p.images[0])}" style="width:48px;height:48px;object-fit:cover;border-radius:7px">`:"🧸"}</td><td><div class="product-name">${esc(p.name)}</div><div class="product-code">${esc(p.code||"")}</div></td><td>${esc(p.category)}</td><td class="price">${money(p.price)}</td><td>${badge(p.stock)}</td></tr>`).join(""):'<tr><td colspan="5"><div class="empty">Nenhum produto cadastrado.</div></td></tr>'
+}
+function updateCategoryFilters(){
+  const s=$("categoryFilter"),cur=s.value;s.innerHTML='<option value="">Todas as categorias</option>'+categories.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("");if(categories.includes(cur))s.value=cur
+}
 function renderProducts(){
-  updateCategoryFilters();
-  const search=($("productSearch")?.value||"").toLowerCase().trim(),cat=$("categoryFilter")?.value||"";
-  const list=products.filter(p=>{const text=[p.name,p.code,p.category,p.brand].join(" ").toLowerCase();return(!search||text.includes(search))&&(!cat||p.category===cat)});
-  $("productsTable").innerHTML=list.length?list.map(p=>`<tr><td>${thumb(p)}</td><td><strong>${esc(p.name)}</strong><div class="product-code">${esc(p.code||"Sem código")}</div></td><td>${esc(p.category)}</td><td>${esc(p.size||"-")}</td><td class="price">${money(p.price)}</td><td>${badge(p.stock)}</td><td><div class="actions"><button class="small-btn" onclick="editProduct('${esc(p.id)}')">Editar</button><button class="danger" onclick="deleteProduct('${esc(p.id)}')">Excluir</button></div></td></tr>`).join(""):`<tr><td colspan="7"><div class="empty">Nenhum produto encontrado.</div></td></tr>`;
+  updateCategoryFilters();const q=($("productSearch").value||"").toLowerCase().trim(),c=$("categoryFilter").value;
+  const list=products.filter(p=>(!q||[p.name,p.code,p.category,p.brand].join(" ").toLowerCase().includes(q))&&(!c||p.category===c));
+  $("productsTable").innerHTML=list.length?list.map(p=>`<tr><td>${p.images?.[0]?`<img src="${esc(p.images[0])}" style="width:50px;height:50px;object-fit:cover;border-radius:7px">`:"🧸"}</td><td><div class="product-name">${esc(p.name)}</div><div class="product-code">${esc(p.code||"Sem código")}</div></td><td>${esc(p.category)}</td><td>${esc(p.size||"-")}</td><td class="price">${money(p.price)}</td><td>${badge(p.stock)}</td><td><div class="actions"><button class="small-btn" onclick="editProduct('${esc(p.id)}')">Editar</button><button class="danger" onclick="deleteProduct('${esc(p.id)}')">Excluir</button></div></td></tr>`).join(""):'<tr><td colspan="7"><div class="empty">Nenhum produto encontrado.</div></td></tr>'
 }
-function renderStock(){
-  const list=[...products].sort((a,b)=>Number(a.stock)-Number(b.stock));
-  $("stockTable").innerHTML=list.length?list.map(p=>`<tr><td>${thumb(p)}</td><td><strong>${esc(p.name)}</strong></td><td>${esc(p.category)}</td><td><strong>${Number(p.stock)}</strong></td><td>${badge(p.stock)}</td><td><button class="small-btn" onclick="editProduct('${esc(p.id)}')">Alterar</button></td></tr>`).join(""):`<tr><td colspan="6"><div class="empty">Nenhum produto cadastrado.</div></td></tr>`;
-}
-function renderCategories(){
-  $("categoryGrid").innerHTML=categories.map(c=>{const n=products.filter(p=>p.category===c).length;return`<div class="category"><div class="category-icon">🧸</div><strong>${esc(c)}</strong><span>${n} ${n===1?"produto":"produtos"}</span><br><br><button class="small-btn" onclick="deleteCategory('${esc(c)}')">Excluir</button></div>`}).join("");
-}
-function renderBanners(){
-  const list=[...banners].sort((a,b)=>a.sort_order-b.sort_order);
-  $("bannerGrid").innerHTML=list.length?list.map(b=>`<div class="banner-card"><img src="${esc(b.image||"")}" alt=""><div class="banner-meta"><div><strong>${esc(b.title||"Sem título")}</strong><div style="color:#888;font-size:12px">${esc(b.text||"")}</div></div><label class="switch"><input type="checkbox" ${Number(b.active)? "checked":""} onchange="toggleBanner('${esc(b.id)}',this.checked)"> Ativo</label></div><div style="margin-top:9px;display:flex;gap:6px"><button class="small-btn" onclick="editBanner('${esc(b.id)}')">Editar</button><button class="danger" onclick="deleteBanner('${esc(b.id)}')">Excluir</button></div></div>`).join(""):`<div class="card"><div class="empty">Nenhum banner cadastrado.</div></div>`;
-}
-function renderAll(){renderDashboard();renderProducts();renderCategories();renderStock();renderBanners();fillProductCategories()}
-
 function fillProductCategories(){$("productCategory").innerHTML=categories.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("")}
-
 function openProductModal(id=null){
   $("productForm").reset();$("productId").value="";$("modalTitle").textContent=id?"Editar produto":"Novo produto";selectedPhotos=[];$("photoPreview").innerHTML="";fillProductCategories();
-  if(id){const p=products.find(x=>x.id===id);if(!p)return;$("productId").value=p.id;$("productName").value=p.name||"";$("productCategory").value=p.category||categories[0];$("productBrand").value=p.brand||"";$("productSize").value=p.size||"";$("productPrice").value=p.price??"";$("productStock").value=p.stock??0;$("productInstallment").value=p.installment||"";$("productCode").value=p.code||"";$("productDescription").value=p.description||"";$("productFeatured").value=p.featured?1:0;$("productActive").value=p.active===0?0:1;selectedPhotos=(p.images||[]).slice(0,5);renderPhotoPreview()}
-  $("productModal").classList.add("show");
+  if(id){const p=products.find(x=>String(x.id)===String(id));if(!p)return;for(const [k,id2] of [["name","productName"],["brand","productBrand"],["size","productSize"],["price","productPrice"],["stock","productStock"],["installment","productInstallment"],["code","productCode"],["description","productDescription"],["featured","productFeatured"],["active","productActive"]])$(id2).value=p[k]??"";$("productId").value=p.id;$("productCategory").value=p.category;selectedPhotos=[...(p.images||[])];renderPhotoPreview()}$("productModal").classList.add("show")
 }
 function closeProductModal(){$("productModal").classList.remove("show")}
-function renderPhotoPreview(){$("photoPreview").innerHTML=selectedPhotos.map((src,i)=>`<div class="preview"><img src="${esc(src)}"><button type="button" onclick="removePhoto(${i})">×</button></div>`).join("")}
+$("productPhotos").addEventListener("change",async function(){const fs=[...this.files];if(selectedPhotos.length+fs.length>5){showToast("Máximo de 5 fotos.");this.value="";return}for(const f of fs)if(f.type.startsWith("image/"))selectedPhotos.push(await resizeImage(f));renderPhotoPreview();this.value=""})
+function resizeImage(file){return new Promise(res=>{const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const max=1400;let w=i.width,h=i.height;if(w>max){h=Math.round(h*max/w);w=max}if(h>max){w=Math.round(w*max/h);h=max}const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(i,0,0,w,h);res(c.toDataURL("image/jpeg",.82))};i.src=r.result};r.readAsDataURL(file)})}
+function renderPhotoPreview(){$("photoPreview").innerHTML=selectedPhotos.map((x,i)=>`<div class="preview"><img src="${esc(x)}"><button type="button" onclick="removePhoto(${i})">×</button></div>`).join("")}
 function removePhoto(i){selectedPhotos.splice(i,1);renderPhotoPreview()}
-async function filesToData(files){
-  const out=[];
-  for(const file of files){
-    if(!file.type.startsWith("image/"))continue;
-    out.push(await resizeImage(file,1200,0.78));
-  }
-  return out;
-}
-function resizeImage(file,max,quality){return new Promise((resolve,reject)=>{const img=new Image();const reader=new FileReader();reader.onload=()=>{img.onload=()=>{let w=img.width,h=img.height;if(Math.max(w,h)>max){const r=max/Math.max(w,h);w=Math.round(w*r);h=Math.round(h*r)}const c=document.createElement("canvas");c.width=w;c.height=h;c.getContext("2d").drawImage(img,0,0,w,h);resolve(c.toDataURL("image/jpeg",quality))};img.onerror=reject;img.src=reader.result};reader.onerror=reject;reader.readAsDataURL(file)})}
-$("productPhotos").addEventListener("change",async e=>{const imgs=await filesToData([...e.target.files].slice(0,5-selectedPhotos.length));selectedPhotos.push(...imgs);selectedPhotos=selectedPhotos.slice(0,5);renderPhotoPreview();e.target.value=""})
 async function saveProduct(e){
-  e.preventDefault();
-  const product={id:$("productId").value||undefined,name:$("productName").value.trim(),category:$("productCategory").value,brand:$("productBrand").value.trim(),size:$("productSize").value.trim(),price:Number($("productPrice").value),stock:Number($("productStock").value),installment:$("productInstallment").value.trim(),code:$("productCode").value.trim(),description:$("productDescription").value.trim(),images:selectedPhotos,featured:Number($("productFeatured").value),active:Number($("productActive").value)};
-  if(!product.name)return showToast("Digite o nome do produto.");
-  try{
-    const d=await saveProductApi(product);const saved=normalizeProduct(d.product||product);
-    const i=products.findIndex(p=>p.id===saved.id);if(i>=0)products[i]=saved;else products.push(saved);
-    localBackup();closeProductModal();renderAll();showToast("Produto salvo no banco!");
-  }catch(err){console.error(err);showToast("Erro ao salvar: "+err.message)}
+  e.preventDefault();const id=$("productId").value;const p=normalizeProduct({id:id||Date.now(),name:$("productName").value.trim(),category:$("productCategory").value,brand:$("productBrand").value.trim(),size:$("productSize").value.trim(),price:Number($("productPrice").value),stock:Number($("productStock").value),installment:$("productInstallment").value.trim(),code:$("productCode").value.trim(),description:$("productDescription").value.trim(),images:selectedPhotos,featured:Number($("productFeatured").value),active:Number($("productActive").value)});
+  try{const r=await api(id?API_PRODUCTS+"/"+encodeURIComponent(id):API_PRODUCTS,{method:id?"PUT":"POST",body:JSON.stringify(p)});const saved=normalizeProduct(r.product||r.data||p);const i=products.findIndex(x=>String(x.id)===String(saved.id));i>=0?products[i]=saved:products.push(saved);showToast(id?"Produto atualizado!":"Produto cadastrado!")}catch(err){const i=products.findIndex(x=>String(x.id)===String(p.id));i>=0?products[i]=p:products.push(p);showToast("Salvo no dispositivo (API indisponível).")}localSave();closeProductModal();renderAll()
 }
 function editProduct(id){openProductModal(id)}
-async function deleteProduct(id){const p=products.find(x=>x.id===id);if(!p||!confirm(`Excluir "${p.name}"?`))return;try{await deleteProductApi(id)}catch(e){console.warn(e)}products=products.filter(x=>x.id!==id);localBackup();renderAll();showToast("Produto excluído.")}
-function addCategory(){const n=prompt("Nome da nova categoria:");if(!n)return;const c=n.trim();if(!c)return;if(categories.some(x=>x.toLowerCase()===c.toLowerCase()))return showToast("Essa categoria já existe.");categories.push(c);localBackup();renderAll();showToast("Categoria criada!")}
-function deleteCategory(c){if(products.some(p=>p.category===c))return alert("Não é possível excluir uma categoria usada por produtos.");if(!confirm(`Excluir a categoria "${c}"?`))return;categories=categories.filter(x=>x!==c);localBackup();renderAll();showToast("Categoria excluída.")}
-function openBannerModal(id=null){
-  $("bannerForm").reset();$("bannerId").value="";selectedBannerImage="";$("bannerPreview").innerHTML="";$("bannerModalTitle").textContent=id?"Editar banner":"Novo banner";
-  if(id){const b=banners.find(x=>x.id===id);if(!b)return;$("bannerId").value=b.id;$("bannerTitle").value=b.title||"";$("bannerText").value=b.text||"";$("bannerLink").value=b.link||"";$("bannerOrder").value=b.sort_order||0;$("bannerActive").value=b.active===0?0:1;selectedBannerImage=b.image||"";if(selectedBannerImage)$("bannerPreview").innerHTML=`<div class="preview"><img src="${esc(selectedBannerImage)}"></div>`}
-  $("bannerModal").classList.add("show");
-}
+async function deleteProduct(id){const p=products.find(x=>String(x.id)===String(id));if(!p||!confirm(`Excluir o produto "${p.name}"?`))return;try{await api(API_PRODUCTS+"/"+encodeURIComponent(id),{method:"DELETE"})}catch(e){}products=products.filter(x=>String(x.id)!==String(id));localSave();renderAll();showToast("Produto excluído.")}
+function renderCategories(){$("categoryGrid").innerHTML=categories.map(c=>{const n=products.filter(p=>p.category===c).length;return`<div class="category"><div class="category-icon">🧸</div><strong>${esc(c)}</strong><span>${n} ${n===1?"produto":"produtos"}</span><br><br><button class="small-btn" onclick="deleteCategory('${esc(c)}')">Excluir</button></div>`}).join("")}
+function addCategory(){const n=prompt("Nome da nova categoria:")?.trim();if(!n)return;if(categories.some(c=>c.toLowerCase()===n.toLowerCase()))return showToast("Essa categoria já existe.");categories.push(n);localSave();renderAll();showToast("Categoria criada!")}
+function deleteCategory(c){if(products.some(p=>p.category===c))return alert("Não é possível excluir: existem produtos nessa categoria.");if(confirm(`Excluir a categoria "${c}"?`)){categories=categories.filter(x=>x!==c);localSave();renderAll();showToast("Categoria excluída.")}}
+function renderStock(){const list=[...products].sort((a,b)=>Number(a.stock)-Number(b.stock));$("stockTable").innerHTML=list.length?list.map(p=>`<tr><td>${p.images?.[0]?`<img src="${esc(p.images[0])}" style="width:45px;height:45px;object-fit:cover;border-radius:7px">`:"🧸"}</td><td><strong>${esc(p.name)}</strong></td><td>${esc(p.category)}</td><td><strong>${Number(p.stock||0)}</strong></td><td>${badge(p.stock)}</td><td><button class="small-btn" onclick="editProduct('${esc(p.id)}')">Alterar</button></td></tr>`).join(""):'<tr><td colspan="6"><div class="empty">Nenhum produto cadastrado.</div></td></tr>'}
+function openBannerModal(id=null){$("bannerForm").reset();$("bannerId").value="";selectedBannerImage="";$("bannerPreview").innerHTML="";$("bannerModalTitle").textContent=id?"Editar banner":"Novo banner";if(id){const b=banners.find(x=>String(x.id)===String(id));if(!b)return;$("bannerId").value=b.id;$("bannerTitle").value=b.title||"";$("bannerText").value=b.text||"";$("bannerLink").value=b.link||"";$("bannerOrder").value=b.sort_order||0;$("bannerActive").value=b.active===undefined?1:b.active;selectedBannerImage=b.image_url||"";renderBannerPreview()}$("bannerModal").classList.add("show")}
 function closeBannerModal(){$("bannerModal").classList.remove("show")}
-$("bannerImage").addEventListener("change",async e=>{if(e.target.files[0]){selectedBannerImage=await resizeImage(e.target.files[0],1600,0.8);$("bannerPreview").innerHTML=`<div class="preview"><img src="${esc(selectedBannerImage)}"></div>`}})
-async function saveBanner(e){
-  e.preventDefault();if(!selectedBannerImage)return showToast("Escolha a imagem do banner.");
-  const b={id:$("bannerId").value||undefined,title:$("bannerTitle").value.trim(),text:$("bannerText").value.trim(),link:$("bannerLink").value.trim(),image:selectedBannerImage,sort_order:Number($("bannerOrder").value||0),active:Number($("bannerActive").value)};
-  try{
-    const method=b.id?"PUT":"POST",url=b.id?API_BANNERS+"/"+encodeURIComponent(b.id):API_BANNERS;const d=await api(url,{method,body:JSON.stringify(b)});const saved=normalizeBanner(d.banner||b);const i=banners.findIndex(x=>x.id===saved.id);if(i>=0)banners[i]=saved;else banners.push(saved);localBackup();closeBannerModal();renderBanners();showToast("Banner salvo no banco!");
-  }catch(err){console.error(err);showToast("Erro ao salvar banner: "+err.message)}
-}
-function editBanner(id){openBannerModal(id)}
-async function deleteBanner(id){if(!confirm("Excluir este banner?"))return;try{await api(API_BANNERS+"/"+encodeURIComponent(id),{method:"DELETE"})}catch(e){console.warn(e)}banners=banners.filter(x=>x.id!==id);localBackup();renderBanners();showToast("Banner excluído.")}
-async function toggleBanner(id,on){const b=banners.find(x=>x.id===id);if(!b)return;b.active=on?1:0;try{const d=await api(API_BANNERS+"/"+encodeURIComponent(id),{method:"PUT",body:JSON.stringify(b)});Object.assign(b,normalizeBanner(d.banner||b));localBackup();showToast("Banner atualizado!")}catch(e){showToast("Não foi possível atualizar o banner.")}}
-function loadSettings(){try{const s=JSON.parse(localStorage.getItem("luckbaby_settings")||"{}");$("storeName").value=s.name||"LUCK BABY";$("storeCity").value=s.city||"";$("storeMessage").value=s.message||"Moda infantil com carinho.";$("storeWhatsapp").value=s.whatsapp||"";$("freeShipping").value=s.freeShipping??500}catch{}}
-function saveSettings(){const s={name:$("storeName").value,city:$("storeCity").value,message:$("storeMessage").value,whatsapp:$("storeWhatsapp").value,freeShipping:Number($("freeShipping").value||0)};localStorage.setItem("luckbaby_settings",JSON.stringify(s));showToast("Configurações salvas!")}
-function exportData(){const data={loja:"LUCK BABY",categorias:categories,produtos:products,banners:banners,exportadoEm:new Date().toISOString()};const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="luck-baby-backup.json";a.click();URL.revokeObjectURL(a.href);showToast("Backup exportado!")}
-function clearAllData(){if(!confirm("Isso apagará apenas os backups locais deste navegador. Continuar?"))return;localStorage.removeItem("luckbaby_products_backup");localStorage.removeItem("luckbaby_banners_backup");products=[];banners=[];renderAll();showToast("Dados locais apagados.")}
-
-$("productModal").addEventListener("click",e=>{if(e.target===$("productModal"))closeProductModal()});
-$("bannerModal").addEventListener("click",e=>{if(e.target===$("bannerModal"))closeBannerModal()});
-loadSettings();updateDate();loadAll();
+$("bannerImage").addEventListener("change",async function(){const f=this.files[0];if(!f)return;if(!f.type.startsWith("image/"))return showToast("Escolha uma imagem válida.");selectedBannerImage=await resizeImage(f);renderBannerPreview();this.value=""})
+function renderBannerPreview(){$("bannerPreview").innerHTML=selectedBannerImage?`<div class="preview"><img src="${esc(selectedBannerImage)}"><button type="button" onclick="removeBannerImage()">×</button></div>`:""}
+function removeBannerImage(){selectedBannerImage="";renderBannerPreview()}
+async function saveBanner(e){e.preventDefault();if(!selectedBannerImage)return showToast("Selecione uma imagem para o banner.");const id=$("bannerId").value,b=normalizeBanner({id:id||Date.now(),title:$("bannerTitle").value.trim(),text:$("bannerText").value.trim(),link:$("bannerLink").value.trim(),image_url:selectedBannerImage,sort_order:Number($("bannerOrder").value||0),active:Number($("bannerActive").value)});try{const r=await api(id?API_BANNERS+"/"+encodeURIComponent(id):API_BANNERS,{method:id?"PUT":"POST",body:JSON.stringify(b)});const saved=normalizeBanner(r.banner||r.data||b);const i=banners.findIndex(x=>String(x.id)===String(saved.id));i>=0?banners[i]=saved:banners.push(saved);showToast(id?"Banner atualizado!":"Banner cadastrado!")}catch(err){const i=banners.findIndex(x=>String(x.id)===String(b.id));i>=0?banners[i]=b:banners.push(b);showToast("Banner salvo no dispositivo.")}localSave();closeBannerModal();renderBanners()}
+function renderBanners(){const g=$("bannerGrid");const list=[...banners].sort((a,b)=>a.sort_order-b.sort_order);g.innerHTML=list.length?list.map(b=>`<div class="banner-card"><img src="${esc(b.image_url)}" alt="${esc(b.title||"Banner")}"><div class="banner-meta"><div><strong>${esc(b.title||"Sem título")}</strong><div style="font-size:12px;color:#999">Ordem: ${b.sort_order}</div></div><label class="switch"><input type="checkbox" ${Number(b.active)!==0?"checked":""} onchange="toggleBanner('${esc(b.id)}',this.checked)"> Ativo</label></div><div style="display:flex;gap:7px;padding:0 12px 12px"><button class="small-btn" onclick="openBannerModal('${esc(b.id)}')">Editar</button><button class="danger" onclick="deleteBanner('${esc(b.id)}')">Excluir</button></div></div>`).join(""):'<div class="card" style="grid-column:1/-1"><div class="empty">Nenhum banner cadastrado.<br><br>Clique em <strong>+ Novo banner</strong>.</div></div>'}
+async function toggleBanner(id,on){const b=banners.find(x=>String(x.id)===String(id));if(!b)return;b.active=on?1:0;try{await api(API_BANNERS+"/"+encodeURIComponent(id),{method:"PUT",body:JSON.stringify(b)})}catch(e){}localSave();showToast(on?"Banner ativado.":"Banner desativado.")}
+async function deleteBanner(id){if(!confirm("Excluir este banner?"))return;try{await api(API_BANNERS+"/"+encodeURIComponent(id),{method:"DELETE"})}catch(e){}banners=banners.filter(x=>String(x.id)!==String(id));localSave();renderBanners();showToast("Banner excluído.")}
+function loadSettings(){try{const s=JSON.parse(localStorage.getItem("luckbaby_settings")||"{}");$("storeName").value=s.name||"LUCK BABY";$("storeCity").value=s.city||"";$("storeWhatsapp").value=s.whatsapp||"";$("freeShipping").value=s.freeShipping||"";$("storeMessage").value=s.message||"Moda infantil com carinho."}catch(e){}}
+function saveSettings(){localStorage.setItem("luckbaby_settings",JSON.stringify({name:$("storeName").value.trim(),city:$("storeCity").value.trim(),whatsapp:$("storeWhatsapp").value.trim(),freeShipping:Number($("freeShipping").value||0),message:$("storeMessage").value.trim()}));showToast("Configurações salvas!")}
+function exportData(){const d={loja:"LUCK BABY",categorias,produtos,banners,configuracoes:JSON.parse(localStorage.getItem("luckbaby_settings")||"{}"),exportadoEm:new Date().toISOString()};const a=document.createElement("a"),u=URL.createObjectURL(new Blob([JSON.stringify(d,null,2)],{type:"application/json"}));a.href=u;a.download="luck-baby-backup.json";a.click();URL.revokeObjectURL(u);showToast("Backup exportado!")}
+function clearAllData(){if(!confirm("ATENÇÃO! Isso apagará os dados locais deste dispositivo. Continuar?"))return;products=[];banners=[];localSave();renderAll();showToast("Dados locais apagados.")}
+function showToast(m){const t=$("toast");t.textContent=m;t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),2500)}
+function renderAll(){renderDashboard();renderProducts();renderBanners();renderCategories();renderStock();fillProductCategories()}
+$("productModal").addEventListener("click",e=>{if(e.target===e.currentTarget)closeProductModal()})
+$("bannerModal").addEventListener("click",e=>{if(e.target===e.currentTarget)closeBannerModal()})
+loadLocal();loadSettings();updateDate();renderAll();loadApi().then(renderAll)
 </script>
-<script src="/admin/pwa.js"></script>
-</body>
-</html>
-function renderProducts(){
-
-  updateCategoryFilters();
-
-  const tbody=$("productsTable");
-
-  const search=
-    ($("productSearch").value||"")
-      .toLowerCase()
-      .trim();
-
-  const category=
-    $("categoryFilter").value||"";
-
-  const filtered=
-    products.filter(p=>{
-
-      const text=
-        (
-          p.name+" "+
-          (p.code||"")+" "+
-          (p.category||"")+" "+
-          (p.brand||"")
-        )
-        .toLowerCase();
-
-      return(
-        (!search||text.includes(search)) &&
-        (!category||p.category===category)
-      );
-
-    });
-
-  if(!filtered.length){
-
-    tbody.innerHTML=`
-
-      <tr>
-
-        <td colspan="7">
-
-          <div class="empty">
-            Nenhum produto encontrado.
-          </div>
-
-        </td>
-
-      </tr>
-
-    `;
-
-    return;
-
-  }
-
-  tbody.innerHTML=
-    filtered.map(p=>{
-
-      const image=
-        p.images &&
-        p.images.length
-          ?p.images[0]
-          :"";
-
-      return`
-
-        <tr>
-
-          <td>
-
-            ${
-              image
-
-              ?`
-                <img
-                  src="${esc(image)}"
-                  style="
-                    width:55px;
-                    height:55px;
-                    object-fit:cover;
-                    border-radius:8px;
-                    border:1px solid #e5ded5;
-                  "
-                >
-              `
-
-              :`
-                <div
-                  style="
-                    width:55px;
-                    height:55px;
-                    border-radius:8px;
-                    background:#f5f1ec;
-                    display:flex;
-                    align-items:center;
-                    justify-content:center;
-                    color:#aaa;
-                    font-size:22px;
-                  "
-                >
-                  🧸
-                </div>
-              `
-            }
-
-          </td>
-
-          <td>
-
-            <div class="product-name">
-              ${esc(p.name)}
-            </div>
-
-            <div class="product-code">
-              ${esc(p.code||"Sem código")}
-            </div>
-
-          </td>
-
-          <td>
-            ${esc(p.category||"-")}
-          </td>
-
-          <td>
-            ${esc(p.size||"-")}
-          </td>
-
-          <td class="price">
-            ${money(p.price)}
-          </td>
-
-          <td>
-            ${badge(p.stock)}
-          </td>
-
-          <td>
-
-            <div class="actions">
-
-              <button
-                class="small-btn"
-                onclick="editProduct('${esc(p.id)}')"
-              >
-                Editar
-              </button>
-
-              <button
-                class="danger"
-                onclick="deleteProduct('${esc(p.id)}')"
-              >
-                Excluir
-              </button>
-
-            </div>
-
-          </td>
-
-        </tr>
-
-      `;
-
-    }).join("");
-
-}
-
-
-/* =========================================================
-   PRODUTO — FOTOS
-========================================================= */
-
-function openProductModal(id=null){
-
-  const modal=$("productModal");
-
-  $("productForm").reset();
-
-  $("productId").value="";
-
-  $("modalTitle").textContent=
-    id
-      ?"Editar produto"
-      :"Novo produto";
-
-  selectedPhotos=[];
-
-  $("photoPreview").innerHTML="";
-
-  fillProductCategories();
-
-  if(id){
-
-    const product=
-      products.find(
-        p=>String(p.id)===String(id)
-      );
-
-    if(!product) return;
-
-    $("productId").value=
-      product.id;
-
-    $("productName").value=
-      product.name||"";
-
-    $("productCategory").value=
-      product.category||"";
-
-    $("productBrand").value=
-      product.brand||"";
-
-    $("productSize").value=
-      product.size||"";
-
-    $("productPrice").value=
-      product.price||0;
-
-    $("productStock").value=
-      product.stock||0;
-
-    $("productInstallment").value=
-      product.installment||"";
-
-    $("productCode").value=
-      product.code||"";
-
-    $("productDescription").value=
-      product.description||"";
-
-    $("productFeatured").value=
-      String(product.featured||0);
-
-    $("productActive").value=
-      String(
-        product.active===undefined
-          ?1
-          :product.active
-      );
-
-    selectedPhotos=
-      Array.isArray(product.images)
-        ?product.images.slice()
-        :[];
-
-    renderPhotoPreview();
-
-  }
-
-  modal.classList.add("show");
-
-}
-
-
-function closeProductModal(){
-
-  $("productModal")
-    .classList
-    .remove("show");
-
-}
-
-
-function fillProductCategories(){
-
-  $("productCategory").innerHTML=
-    categories
-      .map(
-        c=>`
-          <option value="${esc(c)}">
-            ${esc(c)}
-          </option>
-        `
-      )
-      .join("");
-
-}
-
-
-$("productPhotos")
-  .addEventListener(
-    "change",
-    async function(){
-
-      const files=
-        [...this.files];
-
-      if(!files.length) return;
-
-      if(
-        selectedPhotos.length+
-        files.length>5
-      ){
-
-        showToast(
-          "Você pode usar no máximo 5 fotos."
-        );
-
-        this.value="";
-
-        return;
-
-      }
-
-      for(const file of files){
-
-        if(!file.type.startsWith("image/")){
-          continue;
-        }
-
-        const image=
-          await resizeImage(file);
-
-        selectedPhotos.push(image);
-
-      }
-
-      renderPhotoPreview();
-
-      this.value="";
-
-    }
-  );
-
-
-function resizeImage(file){
-
-  return new Promise(
-    resolve=>{
-
-      const reader=
-        new FileReader();
-
-      reader.onload=
-        function(){
-
-          const img=
-            new Image();
-
-          img.onload=
-            function(){
-
-              const max=1200;
-
-              let width=
-                img.width;
-
-              let height=
-                img.height;
-
-              if(width>max){
-
-                height=
-                  Math.round(
-                    height*
-                    max/
-                    width
-                  );
-
-                width=max;
-
-              }
-
-              if(height>max){
-
-                width=
-                  Math.round(
-                    width*
-                    max/
-                    height
-                  );
-
-                height=max;
-
-              }
-
-              const canvas=
-                document.createElement(
-                  "canvas"
-                );
-
-              canvas.width=width;
-              canvas.height=height;
-
-              const ctx=
-                canvas.getContext(
-                  "2d"
-                );
-
-              ctx.drawImage(
-                img,
-                0,
-                0,
-                width,
-                height
-              );
-
-              resolve(
-                canvas.toDataURL(
-                  "image/jpeg",
-                  .82
-                )
-              );
-
-            };
-
-          img.src=
-            reader.result;
-
-        };
-
-      reader.readAsDataURL(file);
-
-    }
-  );
-
-}
-
-
-function renderPhotoPreview(){
-
-  const box=
-    $("photoPreview");
-
-  box.innerHTML=
-    selectedPhotos
-      .map(
-        (image,index)=>`
-
-          <div class="preview">
-
-            <img
-              src="${esc(image)}"
-            >
-
-            <button
-              type="button"
-              onclick="removePhoto(${index})"
-            >
-              ×
-            </button>
-
-          </div>
-
-        `
-      )
-      .join("");
-
-}
-
-
-function removePhoto(index){
-
-  selectedPhotos.splice(
-    index,
-    1
-  );
-
-  renderPhotoPreview();
-
-}
-
-
-/* =========================================================
-   SALVAR PRODUTO
-========================================================= */
-
-async function saveProduct(event){
-
-  event.preventDefault();
-
-  const button=
-    event.submitter;
-
-  if(button){
-    button.disabled=true;
-  }
-
-  const id=
-    $("productId").value;
-
-  const product={
-
-    id:
-      id ||
-      (
-        Date.now().toString()+
-        Math.random()
-          .toString(16)
-          .slice(2)
-      ),
-
-    name:
-      $("productName")
-        .value
-        .trim(),
-
-    category:
-      $("productCategory")
-        .value,
-
-    brand:
-      $("productBrand")
-        .value
-        .trim(),
-
-    size:
-      $("productSize")
-        .value
-        .trim(),
-
-    price:
-      Number(
-        $("productPrice")
-          .value
-      ),
-
-    stock:
-      Number(
-        $("productStock")
-          .value
-      ),
-
-    installment:
-      $("productInstallment")
-        .value
-        .trim(),
-
-    code:
-      $("productCode")
-        .value
-        .trim(),
-
-    description:
-      $("productDescription")
-        .value
-        .trim(),
-
-    images:
-      selectedPhotos,
-
-    featured:
-      Number(
-        $("productFeatured")
-          .value
-      ),
-
-    active:
-      Number(
-        $("productActive")
-          .value
-      )
-
-  };
-
-  if(!product.name){
-
-    showToast(
-      "Digite o nome do produto."
-    );
-
-    if(button){
-      button.disabled=false;
-    }
-
-    return;
-
-  }
-
-  try{
-
-    const result=
-      await saveProductApi(
-        product
-      );
-
-    const saved=
-      normalizeProduct(
-        result.product||product
-      );
-
-    const index=
-      products.findIndex(
-        p=>String(p.id)===String(saved.id)
-      );
-
-    if(index>=0){
-
-      products[index]=saved;
-
-    }else{
-
-      products.push(saved);
-
-    }
-
-    localBackup();
-
-    closeProductModal();
-
-    renderAll();
-
-    showToast(
-      id
-        ?"Produto atualizado!"
-        :"Produto cadastrado!"
-    );
-
-  }catch(error){
-
-    console.error(error);
-
-    /*
-      Se a API ainda não estiver configurada,
-      mantém o produto no backup local.
-    */
-
-    const index=
-      products.findIndex(
-        p=>String(p.id)===String(product.id)
-      );
-
-    if(index>=0){
-
-      products[index]=product;
-
-    }else{
-
-      products.push(product);
-
-    }
-
-    localBackup();
-
-    closeProductModal();
-
-    renderAll();
-
-    showToast(
-      "Salvo no dispositivo. API não respondeu."
-    );
-
-  }finally{
-
-    if(button){
-      button.disabled=false;
-    }
-
-  }
-
-}
-
-
-/* =========================================================
-   EDITAR / EXCLUIR
-========================================================= */
-
-function editProduct(id){
-
-  openProductModal(id);
-
-}
-
-
-async function deleteProduct(id){
-
-  const product=
-    products.find(
-      p=>String(p.id)===String(id)
-    );
-
-  if(!product) return;
-
-  if(
-    !confirm(
-      `Excluir o produto "${product.name}"?`
-    )
-  ){
-
-    return;
-
-  }
-
-  try{
-
-    await deleteProductApi(id);
-
-  }catch(error){
-
-    console.warn(
-      "API de exclusão:",
-      error
-    );
-
-  }
-
-  products=
-    products.filter(
-      p=>String(p.id)!==String(id)
-    );
-
-  localBackup();
-
-  renderAll();
-
-  showToast(
-    "Produto excluído."
-  );
-
-}
-
-
-/* =========================================================
-   CATEGORIAS
-========================================================= */
-
-function renderCategories(){
-
-  const grid=
-    $("categoryGrid");
-
-  grid.innerHTML=
-    categories
-      .map(
-        category=>{
-
-          const count=
-            products.filter(
-              p=>
-                p.category===
-                category
-            ).length;
-
-          return`
-
-            <div class="category">
-
-              <div class="category-icon">
-                🧸
-              </div>
-
-              <strong>
-                ${esc(category)}
-              </strong>
-
-              <span>
-                ${count}
-                ${
-                  count===1
-                    ?"produto"
-                    :"produtos"
-                }
-              </span>
-
-              <br><br>
-
-              <button
-                class="small-btn"
-                onclick="deleteCategory('${esc(category)}')"
-              >
-                Excluir
-              </button>
-
-            </div>
-
-          `;
-
-        }
-      )
-      .join("");
-
-}
-
-
-function addCategory(){
-
-  const name=
-    prompt(
-      "Nome da nova categoria:"
-    );
-
-  if(!name) return;
-
-  const category=
-    name.trim();
-
-  if(!category) return;
-
-  if(
-    categories
-      .some(
-        c=>
-          c.toLowerCase()===
-          category.toLowerCase()
-      )
-  ){
-
-    showToast(
-      "Essa categoria já existe."
-    );
-
-    return;
-
-  }
-
-  categories.push(
-    category
-  );
-
-  localBackup();
-
-  renderAll();
-
-  showToast(
-    "Categoria criada!"
-  );
-
-}
-
-
-function deleteCategory(category){
-
-  if(
-    products.some(
-      p=>p.category===category
-    )
-  ){
-
-    alert(
-      "Não é possível excluir esta categoria porque existem produtos cadastrados nela."
-    );
-
-    return;
-
-  }
-
-  if(
-    !confirm(
-      `Excluir a categoria "${category}"?`
-    )
-  ){
-
-    return;
-
-  }
-
-  categories=
-    categories.filter(
-      c=>c!==category
-    );
-
-  localBackup();
-
-  renderAll();
-
-  showToast(
-    "Categoria excluída."
-  );
-
-}
-
-
-/* =========================================================
-   ESTOQUE
-========================================================= */
-
-function renderStock(){
-
-  const tbody=
-    $("stockTable");
-
-  if(!products.length){
-
-    tbody.innerHTML=`
-
-      <tr>
-
-        <td colspan="6">
-
-          <div class="empty">
-            Nenhum produto cadastrado.
-          </div>
-
-        </td>
-
-      </tr>
-
-    `;
-
-    return;
-
-  }
-
-  const sorted=
-    [...products].sort(
-      (a,b)=>
-        Number(a.stock)-
-        Number(b.stock)
-    );
-
-  tbody.innerHTML=
-    sorted
-      .map(
-        p=>{
-
-          const image=
-            p.images &&
-            p.images.length
-              ?p.images[0]
-              :"";
-
-          return`
-
-            <tr>
-
-              <td>
-
-                ${
-                  image
-
-                  ?`
-                    <img
-                      src="${esc(image)}"
-                      style="
-                        width:50px;
-                        height:50px;
-                        object-fit:cover;
-                        border-radius:7px;
-                      "
-                    >
-                  `
-
-                  :"🧸"
-                }
-
-              </td>
-
-              <td>
-
-                <strong>
-                  ${esc(p.name)}
-                </strong>
-
-              </td>
-
-              <td>
-                ${esc(p.category||"-")}
-              </td>
-
-              <td>
-
-                <strong>
-                  ${Number(p.stock||0)}
-                </strong>
-
-              </td>
-
-              <td>
-                ${badge(p.stock)}
-              </td>
-
-              <td>
-
-                <button
-                  class="small-btn"
-                  onclick="editProduct('${esc(p.id)}')"
-                >
-                  Alterar
-                </button>
-
-              </td>
-
-            </tr>
-
-          `;
-
-        }
-      )
-      .join("");
-
-}
-
-
-/* =========================================================
-   BANNERS
-========================================================= */
-
-function openBannerModal(id=null){
-
-  $("bannerForm").reset();
-
-  $("bannerId").value="";
-
-  selectedBannerImage="";
-
-  $("bannerPreview").innerHTML="";
-
-  $("bannerModalTitle").textContent=
-    id
-      ?"Editar banner"
-      :"Novo banner";
-
-  if(id){
-
-    const banner=
-      banners.find(
-        b=>String(b.id)===String(id)
-      );
-
-    if(!banner) return;
-
-    $("bannerId").value=
-      banner.id;
-
-    $("bannerTitle").value=
-      banner.title||"";
-
-    $("bannerText").value=
-      banner.text||"";
-
-    $("bannerLink").value=
-      banner.link||"";
-
-    $("bannerOrder").value=
-      banner.sort_order||0;
-
-    $("bannerActive").value=
-      String(
-        banner.active===undefined
-          ?1
-          :banner.active
-      );
-
-    selectedBannerImage=
-      banner.image_url||
-      banner.image||
-      "";
-
-    renderBannerPreview();
-
-  }
-
-  $("bannerModal")
-    .classList
-    .add("show");
-
-}
-
-
-function closeBannerModal(){
-
-  $("bannerModal")
-    .classList
-    .remove("show");
-
-}
-
-
-$("bannerImage")
-  .addEventListener(
-    "change",
-    async function(){
-
-      const file=
-        this.files[0];
-
-      if(!file) return;
-
-      if(
-        !file.type.startsWith("image/")
-      ){
-
-        showToast(
-          "Escolha uma imagem válida."
-        );
-
-        return;
-
-      }
-
-      selectedBannerImage=
-        await resizeImage(file);
-
-      renderBannerPreview();
-
-      this.value="";
-
-    }
-  );
-
-
-function renderBannerPreview(){
-
-  if(!selectedBannerImage){
-
-    $("bannerPreview").innerHTML="";
-
-    return;
-
-  }
-
-  $("bannerPreview").innerHTML=`
-
-    <div class="preview">
-
-      <img
-        src="${esc(selectedBannerImage)}"
-        style="object-fit:cover"
-      >
-
-      <button
-        type="button"
-        onclick="removeBannerImage()"
-      >
-        ×
-      </button>
-
-    </div>
-
-  `;
-
-}
-
-
-function removeBannerImage(){
-
-  selectedBannerImage="";
-
-  renderBannerPreview();
-
-}
-
-
-async function saveBanner(event){
-
-  event.preventDefault();
-
-  const id=
-    $("bannerId").value;
-
-  if(!selectedBannerImage){
-
-    showToast(
-      "Selecione uma imagem para o banner."
-    );
-
-    return;
-
-  }
-
-  const banner={
-
-    id:
-      id ||
-      (
-        Date.now().toString()+
-        Math.random()
-          .toString(16)
-          .slice(2)
-      ),
-
-    title:
-      $("bannerTitle")
-        .value
-        .trim(),
-
-    text:
-      $("bannerText")
-        .value
-        .trim(),
-
-    link:
-      $("bannerLink")
-        .value
-        .trim(),
-
-    image_url:
-      selectedBannerImage,
-
-    sort_order:
-      Number(
-        $("bannerOrder")
-          .value||0
-      ),
-
-    active:
-      Number(
-        $("bannerActive")
-          .value
-      )
-
-  };
-
-  try{
-
-    const result=
-      await api(
-        id
-          ?API_BANNERS+
-            "/"+
-            encodeURIComponent(id)
-          :API_BANNERS,
-        {
-          method:id
-            ?"PUT"
-            :"POST",
-          body:
-            JSON.stringify(
-              banner
-            )
-        }
-      );
-
-    const saved=
-      normalizeBanner(
-        result.banner||banner
-      );
-
-    const index=
-      banners.findIndex(
-        b=>String(b.id)===
-          String(saved.id)
-      );
-
-    if(index>=0){
-
-      banners[index]=saved;
-
-    }else{
-
-      banners.push(saved);
-
-    }
-
-    localBackup();
-
-    closeBannerModal();
-
-    renderBanners();
-
-    showToast(
-      id
-        ?"Banner atualizado!"
-        :"Banner cadastrado!"
-    );
-
-  }catch(error){
-
-    console.warn(error);
-
-    const index=
-      banners.findIndex(
-        b=>String(b.id)===
-          String(banner.id)
-      );
-
-    if(index>=0){
-
-      banners[index]=banner;
-
-    }else{
-
-      banners.push(banner);
-
-    }
-
-    localBackup();
-
-    closeBannerModal();
-
-    renderBanners();
-
-    showToast(
-      "Banner salvo no dispositivo."
-    );
-
-  }
-
-}
-
-
-function renderBanners(){
-
-  const grid=
-    $("bannerGrid");
-
-  if(!banners.length){
-
-    grid.innerHTML=`
-
-      <div class="card">
-
-        <div class="empty">
-
-          Nenhum banner cadastrado.
-
-          <br><br>
-
-          Clique em
-          <strong>+ Novo banner</strong>
-          para adicionar.
-
-        </div>
-
-      </div>
-
-    `;
-
-    return;
-
-  }
-
-  const sorted=
-    [...banners].sort(
-      (a,b)=>
-        Number(a.sort_order||0)-
-        Number(b.sort_order||0)
-    );
-
-  grid.innerHTML=
-    sorted
-      .map(
-        b=>`
-
-          <div class="banner-card">
-
-            <img
-              src="${esc(
-                b.image_url||
-                b.image||
-                ""
-              )}"
-              alt="${esc(b.title||"Banner")}"
-            >
-
-            <div class="banner-meta">
-
-              <div>
-
-                <strong>
-                  ${esc(
-                    b.title||
-                    "Sem título"
-                  )}
-                </strong>
-
-                <div
-                  style="
-                    font-size:12px;
-                    color:#999;
-                    margin-top:3px;
-                  "
-                >
-                  Ordem:
-                  ${Number(
-                    b.sort_order||0
-                  )}
-                </div>
-
-              </div>
-
-              <label class="switch">
-
-                <input
-                  type="checkbox"
-                  ${
-                    Number(b.active)!==0
-                      ?"checked"
-                      :""
-                  }
-                  onchange="toggleBanner('${esc(b.id)}',this.checked)"
-                >
-
-                Ativo
-
-              </label>
-
-            </div>
-
-            <div
-              style="
-                display:flex;
-                gap:7px;
-                margin-top:10px;
-              "
-            >
-
-              <button
-                class="small-btn"
-                onclick="openBannerModal('${esc(b.id)}')"
-              >
-                Editar
-              </button>
-
-              <button
-                class="danger"
-                onclick="deleteBanner('${esc(b.id)}')"
-              >
-                Excluir
-              </button>
-
-            </div>
-
-          </div>
-
-        `
-      )
-      .join("");
-
-}
-
-
-async function toggleBanner(id,active){
-
-  const banner=
-    banners.find(
-      b=>String(b.id)===String(id)
-    );
-
-  if(!banner) return;
-
-  banner.active=
-    active?1:0;
-
-  try{
-
-    await api(
-      API_BANNERS+
-      "/"+
-      encodeURIComponent(id),
-      {
-        method:"PUT",
-        body:
-          JSON.stringify(
-            banner
-          )
-      }
-    );
-
-  }catch(error){
-
-    console.warn(error);
-
-  }
-
-  localBackup();
-
-  showToast(
-    active
-      ?"Banner ativado."
-      :"Banner desativado."
-  );
-
-}
-
-
-async function deleteBanner(id){
-
-  const banner=
-    banners.find(
-      b=>String(b.id)===String(id)
-    );
-
-  if(!banner) return;
-
-  if(
-    !confirm(
-      "Excluir este banner?"
-    )
-  ){
-
-    return;
-
-  }
-
-  try{
-
-    await api(
-      API_BANNERS+
-      "/"+
-      encodeURIComponent(id),
-      {
-        method:"DELETE"
-      }
-    );
-
-  }catch(error){
-
-    console.warn(error);
-
-  }
-
-  banners=
-    banners.filter(
-      b=>String(b.id)!==
-        String(id)
-    );
-
-  localBackup();
-
-  renderBanners();
-
-  showToast(
-    "Banner excluído."
-  );
-
-}
-
-
-/* =========================================================
-   CONFIGURAÇÕES
-========================================================= */
-
-function loadSettings(){
-
-  try{
-
-    const settings=
-      JSON.parse(
-        localStorage.getItem(
-          "luckbaby_settings"
-        )||"{}"
-      );
-
-    if(settings.name)
-      $("storeName").value=
-        settings.name;
-
-    if(settings.city)
-      $("storeCity").value=
-        settings.city;
-
-    if(settings.message)
-      $("storeMessage").value=
-        settings.message;
-
-    if(settings.whatsapp)
-      $("storeWhatsapp").value=
-        settings.whatsapp;
-
-    if(settings.freeShipping)
-      $("freeShipping").value=
-        settings.freeShipping;
-
-  }catch(error){
-
-    console.warn(error);
-
-  }
-
-}
-
-
-function saveSettings(){
-
-  const settings={
-
-    name:
-      $("storeName")
-        .value
-        .trim(),
-
-    city:
-      $("storeCity")
-        .value
-        .trim(),
-
-    message:
-      $("storeMessage")
-        .value
-        .trim(),
-
-    whatsapp:
-      $("storeWhatsapp")
-        .value
-        .trim(),
-
-    freeShipping:
-      Number(
-        $("freeShipping")
-          .value||0
-      )
-
-  };
-
-  localStorage.setItem(
-    "luckbaby_settings",
-    JSON.stringify(
-      settings
-    )
-  );
-
-  showToast(
-    "Configurações salvas!"
-  );
-
-}
-
-
-/* =========================================================
-   EXPORTAR
-========================================================= */
-
-function exportData(){
-
-  const data={
-
-    loja:"LUCK BABY",
-
-    categorias:
-      categories,
-
-    produtos:
-      products,
-
-    banners:
-      banners,
-
-    exportadoEm:
-      new Date().toISOString()
-
-  };
-
-  const blob=
-    new Blob(
-      [
-        JSON.stringify(
-          data,
-          null,
-          2
-        )
-      ],
-      {
-        type:"application/json"
-      }
-    );
-
-  const url=
-    URL.createObjectURL(
-      blob
-    );
-
-  const a=
-    document.createElement(
-      "a"
-    );
-
-  a.href=url;
-
-  a.download=
-    "luck-baby-backup.json";
-
-  document.body.appendChild(a);
-
-  a.click();
-
-  a.remove();
-
-  URL.revokeObjectURL(url);
-
-  showToast(
-    "Backup exportado!"
-  );
-
-}
-
-
-/* =========================================================
-   LIMPAR DADOS
-========================================================= */
-
-function clearAllData(){
-
-  if(
-    !confirm(
-      "ATENÇÃO!\n\nIsso apagará os dados locais deste dispositivo.\n\nDeseja continuar?"
-    )
-  ){
-
-    return;
-
-  }
-
-  products=[];
-
-  banners=[];
-
-  localBackup();
-
-  renderAll();
-
-  showToast(
-    "Dados locais apagados."
-  );
-
-}
-
-
-/* =========================================================
-   RENDER GERAL
-========================================================= */
-
-function renderAll(){
-
-  renderDashboard();
-
-  renderProducts();
-
-  renderBanners();
-
-  renderCategories();
-
-  renderStock();
-
-  fillProductCategories();
-
-}
-
-
-/* =========================================================
-   FECHAR MODAIS
-========================================================= */
-
-$("productModal")
-  .addEventListener(
-    "click",
-    function(event){
-
-      if(event.target===this){
-
-        closeProductModal();
-
-      }
-
-    }
-  );
-
-
-$("bannerModal")
-  .addEventListener(
-    "click",
-    function(event){
-
-      if(event.target===this){
-
-        closeBannerModal();
-
-      }
-
-    }
-  );
-
-
-/* =========================================================
-   INICIAR
-========================================================= */
-
-loadSettings();
-
-updateDate();
-
-loadAll();
-
-</script>
-
 </body>
 </html>
