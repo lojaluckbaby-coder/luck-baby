@@ -56,54 +56,66 @@ export async function onRequestGet({request,env}){
     },503);
   }
 
-  const row=await env.DB
-    .prepare('SELECT data,updated_at FROM store WHERE id=1')
-    .first();
+  try{
+    const row=await env.DB
+      .prepare('SELECT data,updated_at FROM store WHERE id=1')
+      .first();
 
-  if(!row){
+    if(!row){
+      return response({
+        ok:true,
+        data:publicData({}),
+        updated_at:null,
+        admin:false
+      });
+    }
+
+    let db;
+
+    try{
+      db=JSON.parse(row.data);
+    }catch{
+      return response({
+        ok:false,
+        error:'Dados da loja inválidos no D1.'
+      },500);
+    }
+
+    const admin=
+      new URL(request.url).searchParams.get('admin')==='1' &&
+      isAdmin(request,env);
+
     return response({
       ok:true,
-      data:publicData({})
+      data:admin ? db : publicData(db),
+      updated_at:row.updated_at,
+      admin
     });
-  }
 
-  let db;
-
-  try{
-    db=JSON.parse(row.data);
-  }catch{
+  }catch(error){
     return response({
       ok:false,
-      error:'Dados da loja inválidos.'
+      error:'Erro ao ler os dados da loja.',
+      detail:error?.message || String(error)
     },500);
   }
-
-  const admin=
-    request.url.includes('admin=1') &&
-    isAdmin(request,env);
-
-  return response({
-    ok:true,
-    data:admin ? db : publicData(db),
-    updated_at:row.updated_at,
-    admin
-  });
 }
 
+/*
+ * SALVAMENTO
+ *
+ * IMPORTANTE:
+ * NÃO exige senha aqui.
+ *
+ * A senha fica somente para entrar
+ * no Painel Administrativo.
+ */
 export async function onRequestPost({request,env}){
-
-  /*
-   * CADASTRO/ALTERAÇÃO SEM SENHA
-   *
-   * A senha de administrador não será mais
-   * exigida para salvar produtos, banners,
-   * categorias e demais dados da loja.
-   */
 
   if(!env.DB){
     return response({
       ok:false,
-      error:'D1 não configurado.'
+      error:'D1 não configurado. Verifique se o banco está ligado como DB.'
     },503);
   }
 
@@ -111,14 +123,15 @@ export async function onRequestPost({request,env}){
 
   try{
     body=await request.json();
-  }catch{
+  }catch(error){
     return response({
       ok:false,
-      error:'JSON inválido.'
+      error:'JSON inválido.',
+      detail:error?.message || String(error)
     },400);
   }
 
-  if(!body || typeof body!=='object'){
+  if(!body || typeof body!=='object' || Array.isArray(body)){
     return response({
       ok:false,
       error:'Dados inválidos.'
@@ -127,15 +140,32 @@ export async function onRequestPost({request,env}){
 
   const now=new Date().toISOString();
 
-  await env.DB
-    .prepare(
-      'INSERT INTO store(id,data,updated_at) VALUES(1,?,?) ON CONFLICT(id) DO UPDATE SET data=excluded.data,updated_at=excluded.updated_at'
-    )
-    .bind(JSON.stringify(body),now)
-    .run();
+  try{
+    await env.DB
+      .prepare(`
+        INSERT INTO store (id, data, updated_at)
+        VALUES (?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+          data = excluded.data,
+          updated_at = excluded.updated_at
+      `)
+      .bind(
+        1,
+        JSON.stringify(body),
+        now
+      )
+      .run();
 
-  return response({
-    ok:true,
-    updated_at:now
-  });
+    return response({
+      ok:true,
+      updated_at:now
+    });
+
+  }catch(error){
+    return response({
+      ok:false,
+      error:'Não foi possível salvar no D1.',
+      detail:error?.message || String(error)
+    },500);
+  }
 }
