@@ -1,0 +1,11 @@
+name = "luck-baby"
+compatibility_date = "2026-08-30"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "luck-baby-db"
+database_id = "COLOQUE_AQUI_O_DATABASE_ID"
+
+[[r2_buckets]]
+binding = "BUCKET"
+bucket_name = "luck-baby-images"
