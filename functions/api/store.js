@@ -1,4 +1,12 @@
-const PUBLIC_KEYS = ['products','banners','brands','categories','promo','settings','shipping'];
+const PUBLIC_KEYS = [
+  'products',
+  'banners',
+  'brands',
+  'categories',
+  'promo',
+  'settings',
+  'shipping'
+];
 
 function cors(){
   return {
@@ -25,7 +33,11 @@ function isAdmin(request,env){
 
 function publicData(db){
   const out={};
-  for(const k of PUBLIC_KEYS) out[k]=db[k];
+
+  for(const k of PUBLIC_KEYS){
+    out[k]=db[k];
+  }
+
   return out;
 }
 
@@ -79,12 +91,14 @@ export async function onRequestGet({request,env}){
 }
 
 export async function onRequestPost({request,env}){
-  if(!isAdmin(request,env)){
-    return response({
-      ok:false,
-      error:'Acesso administrativo negado.'
-    },401);
-  }
+
+  /*
+   * CADASTRO/ALTERAÇÃO SEM SENHA
+   *
+   * A senha de administrador não será mais
+   * exigida para salvar produtos, banners,
+   * categorias e demais dados da loja.
+   */
 
   if(!env.DB){
     return response({
@@ -93,7 +107,16 @@ export async function onRequestPost({request,env}){
     },503);
   }
 
-  const body=await request.json();
+  let body;
+
+  try{
+    body=await request.json();
+  }catch{
+    return response({
+      ok:false,
+      error:'JSON inválido.'
+    },400);
+  }
 
   if(!body || typeof body!=='object'){
     return response({
